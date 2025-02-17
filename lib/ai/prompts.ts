@@ -1,4 +1,4 @@
-import { ArtifactKind } from '@/components/artifact';
+import { ArtifactKind } from "@/components/artifact";
 
 export const artifactsPrompt = `
 Artifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.
@@ -31,18 +31,21 @@ This is a guide for using artifacts tools: \`createDocument\` and \`updateDocume
 Do not update document right after creating it. Wait for user feedback or request to update it.
 `;
 
+// [Morph] AI Prompt
+const morphPrompt = `When working with external resources, summarize the information from tool responses naturally in sentences. Avoid repeating raw JSON data or using bullet points. If you need additional details to fully answer the user's question, use the resourceRef ID to retrieve the missing resource. If you encounter access issues with external tools, first create a new connection or update the existing one with the required scope.`;
+
 export const regularPrompt =
-  'You are a friendly assistant! Keep your responses concise and helpful.';
+  "You are a friendly assistant! Keep your responses concise and helpful.";
 
 export const systemPrompt = ({
   selectedChatModel,
 }: {
   selectedChatModel: string;
 }) => {
-  if (selectedChatModel === 'chat-model-reasoning') {
-    return regularPrompt;
+  if (selectedChatModel === "chat-model-reasoning") {
+    return `${regularPrompt}\n\n${morphPrompt}`;
   } else {
-    return `${regularPrompt}\n\n${artifactsPrompt}`;
+    return `${regularPrompt}\n\n${morphPrompt}\n\n${artifactsPrompt}`;
   }
 };
 
@@ -80,24 +83,24 @@ You are a spreadsheet creation assistant. Create a spreadsheet in csv format bas
 
 export const updateDocumentPrompt = (
   currentContent: string | null,
-  type: ArtifactKind,
+  type: ArtifactKind
 ) =>
-  type === 'text'
+  type === "text"
     ? `\
 Improve the following contents of the document based on the given prompt.
 
 ${currentContent}
 `
-    : type === 'code'
-      ? `\
+    : type === "code"
+    ? `\
 Improve the following code snippet based on the given prompt.
 
 ${currentContent}
 `
-      : type === 'sheet'
-        ? `\
+    : type === "sheet"
+    ? `\
 Improve the following spreadsheet based on the given prompt.
 
 ${currentContent}
 `
-        : '';
+    : "";
